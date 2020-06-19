@@ -14,6 +14,8 @@ class Project:
     def gather_details(self):
         # Gather user input information about this project
         self.name = input("Project name: ")
+        # Check if this project name already exists
+        check_project(self.name, self.csvName)
         while 1:
             # Loop until a valid entry is made
             self.length = input("Project length (in days): ")
@@ -62,19 +64,50 @@ class Project:
             pWriter = csv.writer(csvFile, delimiter='|')
             pWriter.writerow([self.name, self.length, self.hours, self.desc])
 
+def check_project(projName, csvName):
+    # Open the csv given and check if the project already exists
+    with open(csvName, newline='') as csvFile:
+        preader = csv.reader(csvFile, delimiter='|')
+        for row in preader:
+            # Grab the first item in the list and compare it
+            if projName == row[0]:
+                edit_proj()
+                print("found it")
+            
 
 
+def edit_proj():
+    # Find the project line and edit it
+    print("edit")
 
 def main():
-    while 1:
-        # Create projects until user is done
-        p = Project()
-        p.gather_details()
-        p.write_to_csv()
-        
-        anotherProject = input("Create another project? [Y|N]: ")
-        if anotherProject.upper() in ['N', 'NO']:
-            break
+    # Present the user with options of what to do
+    print("Welcome! What would you like to do?")
+    print("1) Create a new project")
+    print("2) Edit a project")
+    print("3) Delete a project")
+    print("4) Exit")
+
+    toDoChoice = input(": ")
+    print(toDoChoice)
+    if int(toDoChoice) == 1:
+        while 1:
+            # Create projects until user is done
+            p = Project()
+            p.write_to_csv()
+            p.gather_details()
+            
+            anotherProject = input("Create another project? [Y|N]: ")
+            if anotherProject.upper() in ['N', 'NO']:
+                break
+    elif int(toDoChoice) == 2:
+        print("You want to edit a project")
+    elif int(toDoChoice) == 3:
+        print("You want to delete a project")
+    elif int(toDoChoice) == 4:
+        quit()
+    else:
+        print("That is not a valid choice")
 
 if __name__ == "__main__":
     main()
