@@ -59,25 +59,28 @@ class Project:
                 break
             else:
                 print("Please use a .csv file")
+        # Get the project details
+        self.gather_details()
         # Write the user input to a csv file keeping track of projects
         with open(self.csvName, 'a', newline='') as csvFile:
-            pWriter = csv.writer(csvFile, delimiter='|')
-            pWriter.writerow([self.name, self.length, self.hours, self.desc])
+            fieldNames = ['project_name', 'project_timeline', 'project_hours', 'project_desc']
+            # Use dictwriter to create a dict for each row for easier editing
+            pWriter = csv.DictWriter(csvFile, fieldnames=fieldNames)
+            print(self.name)
+            pWriter.writerow({'project_name': self.name, 'project_timeline': self.length, 'project_hours': self.hours,'project_desc': self.desc})
 
 def check_project(projName, csvName):
     # Open the csv given and check if the project already exists
     with open(csvName, newline='') as csvFile:
-        preader = csv.reader(csvFile, delimiter='|')
+        preader = csv.DictReader(csvFile)
         for row in preader:
-            # Grab the first item in the list and compare it
-            if projName == row[0]:
-                edit_proj()
-                print("found it")
+            print(row['project_name'])
             
 
 
 def edit_proj():
     # Find the project line and edit it
+
     print("edit")
 
 def main():
@@ -95,7 +98,6 @@ def main():
             # Create projects until user is done
             p = Project()
             p.write_to_csv()
-            p.gather_details()
             
             anotherProject = input("Create another project? [Y|N]: ")
             if anotherProject.upper() in ['N', 'NO']:
